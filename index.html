@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST & Percentage Calculator</title>
+    <meta name="keywords" content="gst calculator, percentage calculator, online gst calculator, calc percentage, online utility tools">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #030712;
+      }
+      .calc-tool-wrapper {
+        display: flex;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center;
+        gap: 30px;
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 20px 10px;
+        box-sizing: border-box;
+        background: #030712;
+        color: #c9d1d9;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+      }
+      
+      .tool-box-container {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        background: #111827;
+        border: 2px solid #374151;
+        box-sizing: border-box;
+        padding: 25px;
+      }
+
+      .tabs-header {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #374151;
+        padding-bottom: 10px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        background: #1f2937;
+        color: #9ca3af;
+        border: none;
+        padding: 10px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .tab-btn.active {
+        background: #2563eb;
+        color: white;
+      }
+
+      .calc-section {
+        display: none;
+      }
+
+      .calc-section.active {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        color: #93c5fd;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        background: #030712;
+        border: 1px solid #4b5563;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+
+      .form-control:focus {
+        border-color: #3b82f6;
+        outline: none;
+      }
+
+      .gst-btns {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 5px;
+      }
+
+      .gst-chip {
+        flex: 1;
+        background: #1f2937;
+        border: 1px solid #4b5563;
+        color: #d1d5db;
+        padding: 8px;
+        text-align: center;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: 0.2s;
+      }
+
+      .gst-chip.selected {
+        background: #2563eb;
+        border-color: #3b82f6;
+        color: white;
+      }
+
+      .result-box {
+        margin-top: 20px;
+        background: #030712;
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 15px;
+      }
+
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      .result-row:last-child {
+        margin-bottom: 0;
+        border-top: 1px dashed #374151;
+        padding-top: 8px;
+        font-weight: 700;
+        color: #4ade80;
+        font-size: 1.1rem;
+      }
+
+      .content-container {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-top: 10px;
+      }
+    </style>
+</head>
+<body>
+
+<div class="calc-tool-wrapper">
+    <div class="tool-box-container">
+        <h2 style="color: #3b82f6; font-size: 1.6rem; font-weight: 700; margin-top: 0; margin-bottom: 10px; text-align: center;">GST & Percentage Calculator</h2>
+        <p style="color: #9ca3af; font-size: 0.9rem; text-align: center; margin-bottom: 20px;">Calculate GST amounts accurately or solve quick percentage equations instantly.</p>
+
+        <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('gst')">GST Calculator</button>
+            <button class="tab-btn" onclick="switchTab('percentage')">Percentage Calculator</button>
+        </div>
+
+        <div id="gst-tab" class="calc-section active">
+            <div class="form-group">
+                <label>Initial Amount (₹)</label>
+                <input type="number" id="gst-amount" class="form-control" placeholder="Enter amount" oninput="calculateGST()">
+            </div>
+
+            <div class="form-group">
+                <label>GST Rate (%)</label>
+                <div class="gst-btns">
+                    <div class="gst-chip" onclick="setGST(3)">3%</div>
+                    <div class="gst-chip selected" onclick="setGST(5)">5%</div>
+                    <div class="gst-chip" onclick="setGST(12)">12%</div>
+                    <div class="gst-chip" onclick="setGST(18)">18%</div>
+                    <div class="gst-chip" onclick="setGST(28)">28%</div>
+                </div>
+                <input type="number" id="custom-gst" class="form-control" style="margin-top: 8px;" placeholder="Or enter custom %" value="5" oninput="setCustomGST()">
+            </div>
+
+            <div class="form-group">
+                <label>Calculation Type</label>
+                <select id="gst-type" class="form-control" onchange="calculateGST()">
+                    <option value="add">Add GST (Exclusive)</option>
+                    <option value="remove">Remove GST (Inclusive)</option>
+                </select>
+            </div>
+
+            <div class="result-box">
+                <div class="result-row"><span>Net Amount:</span> <span id="net-val">₹0.00</span></div>
+                <div class="result-row"><span>GST Amount:</span> <span id="gst-val">₹0.00</span></div>
+                <div class="result-row"><span>Total Amount:</span> <span id="total-val">₹0.00</span></div>
+            </div>
+        </div>
+
+        <div id="percentage-tab" class="calc-section">
+            <div class="form-group">
+                <label>What is</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="p-val1" class="form-control" placeholder="e.g. 20" oninput="calculatePercentage()">
+                    <span style="align-self: center; color: #9ca3af; font-weight: 600;">% of</span>
+                    <input type="number" id="p-val2" class="form-control" placeholder="e.g. 500" oninput="calculatePercentage()">
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-row"><span>Percentage Result:</span> <span id="p-result">0.00</span></div>
+                <div class="result-row"><span>Value After Adding (%+):</span> <span id="p-add-val">0.00</span></div>
+                <div class="result-row"><span>Value After Subtracting (%-):</span> <span id="p-sub-val">0.00</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <header style="margin-bottom: 25px;">
+            <h1 style="color: #3b82f6; font-size: 1.9rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px;">Online GST & Percentage Calculator</h1>
+            <p style="font-size: 1rem; color: #9ca3af; margin-top: 0;">Use our free online calculation utilities to easily compute Goods and Services Tax (GST) additions, subtractions, and standard percentages in seconds.</p>
+        </header>
+    </div>
+</div>
+
+<script>
+    let currentGST = 5;
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.calc-section').forEach(sec => sec.classList.remove('active'));
+
+        if (tabName === 'gst') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('gst-tab').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('percentage-tab').classList.add('active');
+        }
+    }
+
+    function setGST(val) {
+        currentGST = val;
+        document.getElementById('custom-gst').value = val;
+        document.querySelectorAll('.gst-chip').forEach(chip => {
+            if(chip.textContent.includes(val + '%')) {
+                chip.classList.add('selected');
+            } else {
+                chip.classList.remove('selected');
+            }
+        });
+        calculateGST();
+    }
+
+    function setCustomGST() {
+        let val = parseFloat(document.getElementById('custom-gst').value);
+        if(!isNaN(val)) {
+            currentGST = val;
+            document.querySelectorAll('.gst-chip').forEach(chip => chip.classList.remove('selected'));
+            calculateGST();
+        }
+    }
+
+    function calculateGST() {
+        let amount = parseFloat(document.getElementById('gst-amount').value);
+        let type = document.getElementById('gst-type').value;
+
+        if (isNaN(amount) || amount <= 0) {
+            document.getElementById('net-val').textContent = '₹0.00';
+            document.getElementById('gst-val').textContent = '₹0.00';
+            document.getElementById('total-val').textContent = '₹0.00';
+            return;
+        }
+
+        let net = 0, gstAmount = 0, total = 0;
+
+        if (type === 'add') {
+            net = amount;
+            gstAmount = (net * currentGST) / 100;
+            total = net + gstAmount;
+        } else {
+            total = amount;
+            net = total / (1 + (currentGST / 100));
+            gstAmount = total - net;
+        }
+
+        document.getElementById('net-val').textContent = '₹' + net.toFixed(2);
+        document.getElementById('gst-val').textContent = '₹' + gstAmount.toFixed(2);
+        document.getElementById('total-val').textContent = '₹' + total.toFixed(2);
+    }
+
+    function calculatePercentage() {
+        let p = parseFloat(document.getElementById('p-val1').value);
+        let base = parseFloat(document.getElementById('p-val2').value);
+
+        if (isNaN(p) || isNaN(base)) {
+            document.getElementById('p-result').textContent = '0.00';
+            document.getElementById('p-add-val').textContent = '0.00';
+            document.getElementById('p-sub-val').textContent = '0.00';
+            return;
+        }
+
+        let result = (p * base) / 100;
+        let addedVal = base + result;
+        let subVal = base - result;
+
+        document.getElementById('p-result').textContent = result.toFixed(2);
+        document.getElementById('p-add-val').textContent = addedVal.toFixed(2);
+        document.getElementById('p-sub-val').textContent = subVal.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
